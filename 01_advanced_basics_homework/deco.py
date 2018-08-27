@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from functools import update_wrapper
+from functools import update_wrapper, wraps
 
 
-def disable():
+def disable(func):
     '''
     Disable a decorator by re-assigning the decorator's name
     to this function. For example, to turn off memoization:
@@ -12,39 +12,60 @@ def disable():
     >>> memo = disable
 
     '''
-    return
+
+    @wraps(func)
+    def make_magic(func):
+        return func
+
+    return make_magic(func)
 
 
-def decorator():
+def decorator(func):
     '''
     Decorate a decorator so that it inherits the docstrings
     and stuff from the function it's decorating.
     '''
-    return
+
+    @wraps(func)
+    def make_magic(func):
+        return func
+
+    return make_magic(func)
 
 
-def countcalls():
+def countcalls(func):
     '''Decorator that counts calls made to the function decorated.'''
-    return
+
+    @wraps(func)
+    def make_magic(func):
+        return func
+
+    return make_magic(func)
 
 
-def memo():
+def memo(func):
     '''
     Memoize a function so that it caches all return values for
     faster future lookups.
     '''
-    return
+    memo_func = func
+    global memo_func
+    return func
 
 
-def n_ary():
+def n_ary(func):
     '''
     Given binary function f(x, y), return an n_ary function such
     that f(x, y, z) = f(x, f(y,z)), etc. Also allow f(x) = x.
     '''
-    return
+    @wraps
+    def make_magic(func):
+
+        return func
+    return make_magic(func)
 
 
-def trace():
+def trace(x):
     '''Trace calls made to function decorated.
 
     @trace("____")
@@ -64,8 +85,8 @@ def trace():
      <-- fib(3) == 3
 
     '''
-    return
 
+    return x
 
 @memo
 @countcalls
@@ -82,7 +103,7 @@ def bar(a, b):
 
 
 @countcalls
-@trace("####")
+@trace
 @memo
 def fib(n):
     """Some doc"""
